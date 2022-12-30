@@ -5,18 +5,20 @@ const helmet = require('helmet')
 const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
 const mongoose = require('mongoose')
-const logger = require('./middleware/logEvents')
+const {logger} = require('./middleware/logEvents')
 const connectDB = require('./config/connectDB')
 mongoose.set('strictQuery', true)
+const errorHandler = require('./middleware/errorHandler')
 const PORT = process.env.PORT || 3500
 
 //connect to MongoDB
 connectDB()
 
 //check allowed origins by CORS
+// without corsOptions cors will grant free access to all domains
 app.use(cors(corsOptions))
 
-//log request into a file reqLog or reqErr
+//log request into a file reqLog or errLog
 app.use(logger)
 
 //built-in middleware to handle urlencoded data (form data)
@@ -28,17 +30,19 @@ app.use(express.json())
 //helmet for secure HTTP headers
 app.use(helmet())
 
+//serve static files
+app.use('/images', express.static('images'))
+
 //routes
-app.get('/', (req, res) => {
-  console.log(req.url)
-  res.status(200).json('GET ROUTE')
-})
+app.use('/products', require('./routes/products'))
 
 //All HTTP methods
 app.all('*', (req, res) => {
   res.status(404).json({ message: '404 Not Found' })
 })
 
+//errorHandler middleware
+app.use(errorHandler)
 
 // verify if it's connected to MongoDB
 mongoose.connection.once('open', () => {
