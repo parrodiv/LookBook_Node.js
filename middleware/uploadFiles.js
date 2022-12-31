@@ -1,6 +1,6 @@
 const multer = require('multer')
-const { format } = require('date-fns')
 const path = require('path')
+const uniqid = require('uniqid')
 
 // upload images
 const storage = multer.diskStorage({
@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     //replace the name of the file
-    cb(null, req.body.name + format(new Date(), 'dd_MM_yyyy_HH:mm:ss') + path.extname(file.originalname))
+    cb(null, req.body.name + uniqid() + path.extname(file.originalname))
   },
 })
 
@@ -24,13 +24,13 @@ const upload = multer({
     if (formatsAccepted.includes(file.mimetype)) {
       cb(null, true)
     } else {
-      console.log('Only jpg, png and jpeg files supported');
-      cb(null, false)
+      cb(new Error('Only png, jpg, jpeg formats accepted'))
     }
   },
   limits: {
     fileSize: 4 * 1024 * 1024  // max 4MB
   }
 })
+
 
 module.exports = upload

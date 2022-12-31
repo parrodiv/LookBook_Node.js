@@ -4,7 +4,7 @@ const path = require('path')
 
 
 const createOrder = async (req, res) => {
-  console.log({ body: req.body, file: req.file })
+  
   if (!req.body?.name) {
     return res
       .status(400)
@@ -13,7 +13,7 @@ const createOrder = async (req, res) => {
 
   let pathImgs = []
 
-  if (req.files){
+  if (req.files){ 
     console.log(req.files);
     req.files.forEach(file => {
       pathImgs.push(file.path)
@@ -36,6 +36,7 @@ const createOrder = async (req, res) => {
     res.status(201).json(newProduct)
   } catch (error) {
     res.status(400).json({message: 'Error: ' + error})
+    throw new Error(error)
   }
 }
 
