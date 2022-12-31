@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const { createOrder } = require('../controllers/productsController')
+const { addProduct} = require('../controllers/productsController')
 const upload = require('../middleware/uploadFiles')
 
 router.route('/')
-  .post(upload.array('images', 4), createOrder) // max 4 files
+  .post(upload.array('images', 4), addProduct) // max 4 files
 
 module.exports= router

@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 
 
-const createOrder = async (req, res) => {
+const addProduct = async (req, res) => {
   
   if (!req.body?.name) {
     return res
@@ -40,4 +40,4 @@ const createOrder = async (req, res) => {
   }
 }
 
-module.exports = { createOrder }
+module.exports = { addProduct }
