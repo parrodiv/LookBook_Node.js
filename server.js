@@ -22,7 +22,7 @@ app.use(cors(corsOptions))
 app.use(logger)
 
 //built-in middleware to handle urlencoded data (form data)
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true}))
 
 //built-in middleware for JSON
 app.use(express.json())

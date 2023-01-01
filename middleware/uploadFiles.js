@@ -24,7 +24,8 @@ const upload = multer({
     if (formatsAccepted.includes(file.mimetype)) {
       cb(null, true)
     } else {
-      cb(new Error('Only png, jpg, jpeg formats accepted'))
+      cb(null, false)
+      throw new Error("Only jpg, jpeg, png formats accepted")
     }
   },
   limits: {
