@@ -19,6 +19,7 @@ const addProduct = async (req, res) => {
     return res.status(422).json({ message: 'Images are required' })
   }
 
+
   try {
     const newProduct = await Product.create({
       name: req.body.name,
@@ -50,11 +51,11 @@ const updateProduct = async (req, res) => {
   }
 
   try {
-     const product = await Product.findById(id)
-     if (!product) {
-       return res.status(404).json({ message: `No product matches ID ${id}` })
-     }
-     
+    const product = await Product.findById(id)
+    if (!product) {
+      return res.status(404).json({ message: `No product matches ID ${id}` })
+    }
+
     if (name) product.name = name
 
     if (req.files.length !== 0) {
