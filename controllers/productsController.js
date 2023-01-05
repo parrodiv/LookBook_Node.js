@@ -1,20 +1,22 @@
 const Product = require('../model/Product')
-const fs = require('fs')
 const fsPromises = require('fs').promises
 const path = require('path')
+const mongoose = require('mongoose')
 
 const addProduct = async (req, res) => {
   if (!req.body?.name) {
-    return res.status(400).json({ message: 'Name is required' })
+    return res.status(422).json({ message: 'Name is required' })
   }
 
   let pathImgs = []
 
-  if (req.files) {
+  if (req.files.length !== 0) {
     console.log(req.files)
     req.files.forEach((file) => {
       pathImgs.push(file.path)
     })
+  } else {
+    return res.status(422).json({ message: 'Images are required' })
   }
 
   try {
@@ -41,15 +43,21 @@ const updateProduct = async (req, res) => {
   const { name } = req.body
   const id = req.params.productId
 
-  const product = await Product.findById(id)
-  if (!product) {
-    return res.status(404).json({ message: `No product matches ID ${id}` })
+  // Check valid id
+  const isValid = mongoose.isValidObjectId(id)
+  if (!isValid) {
+    return res.status(400).json({ message: 'The provided ID is not valid' })
   }
 
   try {
+     const product = await Product.findById(id)
+     if (!product) {
+       return res.status(404).json({ message: `No product matches ID ${id}` })
+     }
+     
     if (name) product.name = name
 
-    if (req.files) {
+    if (req.files.length !== 0) {
       let pathImgs = []
       req.files.forEach((file) => {
         pathImgs.push(file.path)
@@ -62,12 +70,18 @@ const updateProduct = async (req, res) => {
     res.status(404).json({ message: `${error.stack}` })
   }
 }
- 
+
 const deleteProduct = async (req, res) => {
   if (!req.params?.productId)
-    return res.status(400), json({ message: 'Product ID required' })
+    return res.status(422).json({ message: 'Product ID required' })
 
   const id = req.params.productId
+  // Check valid id
+  const isValid = mongoose.isValidObjectId(id)
+  if (!isValid) {
+    return res.status(400).json({ message: 'The provided ID is not valid' })
+  }
+
   try {
     const productToDelete = await Product.findById(id).exec()
     console.log(productToDelete)
@@ -82,7 +96,7 @@ const deleteProduct = async (req, res) => {
       try {
         await fsPromises.unlink(path.join(__dirname, '..', 'images', file))
       } catch (error) {
-        throw new Error `Failed to delete files: ${error}`
+        throw new Error`Failed to delete files: ${error}`()
       }
     })
 

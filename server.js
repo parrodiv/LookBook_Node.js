@@ -35,6 +35,7 @@ app.use('/images', express.static('images'))
 
 //routes
 app.use('/products', require('./routes/products'))
+app.use('/users', require('./routes/users'))
 
 //All HTTP methods
 app.all('*', (req, res) => {
