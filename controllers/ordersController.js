@@ -5,7 +5,7 @@ const {
   validateOrder,
   validateOrderUpdate,
 } = require('../validators/orderValidator')
-const { format } = require('date-fns')
+const mongoose = require('mongoose')
 
 const addOrder = async (req, res) => {
   const { error, value } = validateOrder(req.body)
@@ -19,8 +19,9 @@ const addOrder = async (req, res) => {
   console.log(usersDB);
   let usersExists = []
   users.forEach((userId) => {
-    console.log(userId);
+    // equals check if ObjectIds are equals
     const user = usersDB.find((userDB) => userDB.equals(userId))
+    console.log({user});
     if (user) {
       usersExists.push(true)
     } else {
@@ -58,6 +59,56 @@ const addOrder = async (req, res) => {
   }
 }
 
+
+const updateOrder = async (req, res) => {
+  const { error, value } = validateOrderUpdate(req.body)
+  if (error) return res.status(422).json({ message: error.details })
+
+  const id = req.params.orderId
+
+  const { users, products } = req.body
+
+  try {
+    const order = await Order.findById(id)
+    if (!order) {
+      return res.status(404).json({ message: `No order matches ID ${id}` })
+    }
+
+    if (users) order.users = users
+    if (products) order.products = products
+
+    const result = await order.save()
+    res.status(200).json(order)
+  } catch (error) {
+    res.status(404).json({ message: `${error.stack}` })
+  }
+}
+
+const deleteOrder = async (req, res) => {
+  if (!req.params?.orderId)
+    return res.status(422).json({ message: 'Product ID required' })
+
+  const id = req.params.orderId
+  // Check valid id
+  const isValid = mongoose.isValidObjectId(id)
+  if (!isValid) {
+    return res.status(422).json({ message: 'The provided ID is not valid' })
+  }
+
+  try {
+    const orderToDelete = await Order.findById(id).exec()
+    if (!orderToDelete) {
+      return res.status(404).json({ message: `Order ID ${id} not found` })
+    }
+    const result = await Order.deleteOne({ _id: id })
+    res.status(200).json({ result, orderDeleted: orderToDelete })
+  } catch (error) {
+    res.status(404).json({ message: `${error}` })
+  }
+}
+
 module.exports = {
-  addOrder
+  addOrder,
+  updateOrder,
+  deleteOrder
 }
