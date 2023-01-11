@@ -5,6 +5,35 @@ const {
   validateUserUpdate,
 } = require('../validators/userValidator')
 
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+    res.status(200).json(users)
+  } catch (error) {
+    res.status(500).json({message: error.message})
+  }
+}
+
+const getUser = async (req, res) => {
+  const id = req.params.userId
+
+  // Check valid id
+  const isValid = mongoose.isValidObjectId(id)
+  if (!isValid) {
+    return res.status(400).json({ message: 'The provided ID is not valid' })
+  }
+
+  try {
+    const user = await User.findById(id)
+    if (!user) {
+      return res.status(404).json({ message: `No user matches ID ${id}` })
+    }
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
 const addUser = async (req, res) => {
   const { error, value } = validateUser(req.body)
   if (error) return res.status(422).json({ message: error.details })
@@ -77,4 +106,4 @@ const deleteUser = async (req, res) => {
   }
 }
 
-module.exports = { addUser, updateUser, deleteUser }
+module.exports = { getUsers, getUser, addUser, updateUser, deleteUser }
