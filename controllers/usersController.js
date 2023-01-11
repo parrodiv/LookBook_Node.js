@@ -19,7 +19,7 @@ const addUser = async (req, res) => {
     })
     res.status(201).json(newUser)
   } catch (error) {
-    res.status(404).json({ message: `${error.stack}` })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -50,7 +50,7 @@ const updateUser = async (req, res) => {
     const result = await user.save()
     res.status(200).json(user)
   } catch (error) {
-    res.status(404).json({ message: `${error.stack}` })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -73,7 +73,7 @@ const deleteUser = async (req, res) => {
     const result = await User.deleteOne({ _id: id })
     res.status(200).json({ result, userDeleted: userToDelete })
   } catch (error) {
-    res.status(404).json({ message: `${error}` })
+    res.status(500).json({ message: `${error}` })
   }
 }
 

@@ -35,8 +35,7 @@ const addProduct = async (req, res) => {
     })
     res.status(201).json(newProduct)
   } catch (error) {
-    res.status(404).json({ message: 'Error: ' + error })
-    throw new Error(error)
+    res.status(500).json({ message: 'Error: ' + error })
   }
 }
 
@@ -68,7 +67,7 @@ const updateProduct = async (req, res) => {
     const result = await product.save()
     res.status(200).json(product)
   } catch (error) {
-    res.status(404).json({ message: `${error.stack}` })
+    res.status(500).json({ message: `${error.stack}` })
   }
 }
 
@@ -104,7 +103,7 @@ const deleteProduct = async (req, res) => {
     const result = await Product.deleteOne({ _id: id })
     res.status(200).json(result)
   } catch (error) {
-    res.status(404).json({ message: `${error}` })
+    res.status(500).json({ message: `${error}` })
   }
 }
 
