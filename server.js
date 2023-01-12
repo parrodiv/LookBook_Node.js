@@ -33,6 +33,9 @@ app.use(helmet())
 //serve static files
 app.use('/images', express.static('images'))
 
+//sanitize inputs
+mongoose.set('sanitizeFilter', true)
+
 //routes
 app.use('/products', require('./routes/products'))
 app.use('/users', require('./routes/users'))

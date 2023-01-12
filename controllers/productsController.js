@@ -3,6 +3,35 @@ const fsPromises = require('fs').promises
 const path = require('path')
 const mongoose = require('mongoose')
 
+const getProducts = async (req, res) => {
+  try {
+    const products = await Product.find()
+    res.status(200).json(products)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+const getProduct = async (req, res) => {
+  const id = req.params.productId
+
+  // Check valid id
+  const isValid = mongoose.isValidObjectId(id)
+  if (!isValid) {
+    return res.status(400).json({ message: 'The provided ID is not valid' })
+  }
+
+  try {
+    const product = await Product.findById(id)
+    if (!product) {
+      return res.status(404).json({ message: `No product matches ID ${id}` })
+    }
+    res.status(200).json(product)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
 const addProduct = async (req, res) => {
   if (!req.body?.name) {
     return res.status(422).json({ message: 'Name is required' })
@@ -107,4 +136,4 @@ const deleteProduct = async (req, res) => {
   }
 }
 
-module.exports = { addProduct, updateProduct, deleteProduct }
+module.exports = { getProducts, getProduct, addProduct, updateProduct, deleteProduct }

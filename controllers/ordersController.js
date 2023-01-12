@@ -26,18 +26,18 @@ const getOrdersByDate = async (req, res) => {
     // search in a range of date else only for targetDate
     if (startDate && endDate) {
       const orders = await Order.find({
-        date: {
+        date: mongoose.trusted({
           $gte: startDate,
           $lt: moment(endDate).endOf('day').toDate(),
-        },
+        }),
       })
       res.status(200).json(orders)
     } else if (targetDate) {
       const orders = await Order.find({
-        date: {
+        date: mongoose.trusted({
           $gte: targetDate,
           $lt: moment(targetDate).endOf('day').toDate(),
-        },
+        }),
       })
       res.status(200).json(orders)
     } else {
@@ -55,15 +55,17 @@ const getOrdersByDate = async (req, res) => {
 
 const getOrdersByProducts = async (req, res) => {
   try {
-    const productIds = req.query?.productIds.split(',')
-    console.log(productIds) // ['id', 'id'...]
-   
-    const orders = await Order.find({
-      products: {
-        $all: productIds
-      },
+    const productIds = req.query?.productIds?.split(',') || []
+    console.log(productIds)
+    const orders = await Order.find()
+
+    let filteredOrders
+    productIds.forEach((id, index) => {
+      filteredOrders = orders.filter(order => order.products.includes(id))
+      console.log(filteredOrders);
     })
-    res.status(200).json(orders)
+
+    res.status(200).json(filteredOrders)
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
