@@ -46,8 +46,8 @@ This project is the final step to complete the Node.js, Express.js and MongoDB s
 
 ### Built With
 
-* [![Javascript][Javascript.js]][Javascript-url]
-* [![NodeJs][NodeJs.js]][NodeJs-url]
+* https://img.shields.io/badge/<Javascript>-<JS>-<yellow>
+* https://img.shields.io/badge/<NodeJS>-<JS>-<green>
 * [MongoDB](https://www.mongodb.com/) - The database for storing data
 
 
@@ -90,7 +90,7 @@ To start the application you need to have Node.js installed on your machine, so 
 npm install npm@latest -g
 ```
 
-### :flippy_disk: Installation
+### :floppy_disk: Installation
 
 1. Clone the repository with git in the path you prefer:
 
