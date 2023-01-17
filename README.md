@@ -40,15 +40,16 @@
   </ol>
 </details>
 
+
 ## About The Project
 This project is the final step to complete the Node.js, Express.js and MongoDB section of start2impact University.
 
 
 ### Built With
 
-* https://img.shields.io/badge/<Javascript>-<JS>-<yellow>
-* https://img.shields.io/badge/<NodeJS>-<JS>-<green>
-* [MongoDB](https://www.mongodb.com/) - The database for storing data
+* [Javascript](https://www.javascript.com/) 
+* [NodeJS](https://nodejs.org/en/) 
+* [MongoDB](https://www.mongodb.com/) 
 
 
 ### :books: Dependencies
@@ -119,6 +120,9 @@ Example:
 5. Test with a client
  
 If you are using VS CODE I suggest you to use Thunderclient extension, otherwise you can use Postman also.
+
+**Deploy by clicking the button below**
+[<img src="https://cdn.gomix.com/2bdfb3f8-05ef-4035-a06e-2043962a3a13%2Fremix-button.svg" width="163px" />](https://glitch.com/edit/#!/import/github/parrodiv/LookBook_Node.js)
 
 
 ### :pushpin: Endpoints
