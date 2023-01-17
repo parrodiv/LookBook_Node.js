@@ -22,7 +22,6 @@ const getOrdersByDate = async (req, res) => {
   try {
     const { startDate, endDate, targetDate } = req.query
 
-    
     // search in a range of date else only for targetDate
     if (startDate && endDate) {
       const orders = await Order.find({
@@ -57,11 +56,10 @@ const getOrdersByProducts = async (req, res) => {
   try {
     const productIds = req.query?.productIds?.split(',') || []
     console.log(productIds)
-    const orders = await Order.find()
+    let filteredOrders = await Order.find()
 
-    let filteredOrders
     productIds.forEach((id, index) => {
-      filteredOrders = orders.filter(order => order.products.includes(id))
+      filteredOrders = filteredOrders.filter(order => order.products.includes(id))
       console.log(filteredOrders);
     })
 
