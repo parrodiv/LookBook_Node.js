@@ -3,6 +3,7 @@ Joi.objectId = require('joi-objectid')(Joi)
 
 const validator = (schema) => (payload) =>
   schema.validate(payload, { abortEarly: false })
+  // abortEarly: false indica che non si deve fermare al primo errore ma elencarmeli tutti
 
 const orderSchema = Joi.object({
   users: Joi.array().items(Joi.objectId()).required(),
@@ -12,7 +13,6 @@ const orderSchema = Joi.object({
 const orderUpdateSchema = Joi.object({
   users: Joi.array().items(Joi.objectId()),
   products: Joi.array().items(Joi.objectId()),
-
 })
 
 const validateOrder = validator(orderSchema)
@@ -22,3 +22,4 @@ module.exports = {
   validateOrder,
   validateOrderUpdate,
 }
+

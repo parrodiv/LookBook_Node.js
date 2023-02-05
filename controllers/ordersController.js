@@ -8,6 +8,9 @@ const {
 
 const mongoose = require('mongoose')
 const moment = require('moment-timezone')
+const mongodb = require('mongodb')
+const ObjectId = mongodb.ObjectId
+
 
 const getOrders = async (req, res) => {
   try {
@@ -75,38 +78,28 @@ const addOrder = async (req, res) => {
 
   const { users, products } = req.body
 
-  // check if users exist
-  const usersDB = await User.find()
-  console.log(usersDB)
-  let usersExists = []
-  users.forEach((userId) => {
-    // equals check if ObjectIds are equals
-    const user = usersDB.find((userDB) => userDB.equals(userId))
-    console.log({ user })
-    if (user) {
-      usersExists.push(true)
-    } else {
-      usersExists.push(false)
+  // CHECK IF USERS EXIST
+  const usersExistCount = await User.find({
+    "_id": {
+      "$in": users,
     }
-  })
-  if (usersExists.every((value) => value !== true)) {
+  }).countDocuments()
+  // here I check how many documents has the userIds that I pass in userObjectIds
+  // I want to make sure that the userObjectIds.length is equal to usersExist that will return a number of documents that match the userObjectIds array
+
+  console.log({usersExistCount})
+  if(usersExistCount !== users.length) {
     return res.status(422).json({ message: 'Not all users are existing' })
   }
 
   // check if products exist
-  const productsDB = await Product.find()
-  let productsExist = []
-  products.forEach((productId) => {
-    const product = productsDB.find((productDB) =>
-      productDB._id.equals(productId)
-    )
-    if (product) {
-      productsExist.push(true)
-    } else {
-      productsExist.push(false)
+  const productsExistCount = await Product.find({
+    _id: {
+      $in: products
     }
-  })
-  if (!productsExist.every((value) => value === true)) {
+  }).countDocuments()
+  
+  if (productsExistCount !== products.length) {
     return res.status(422).json({ message: 'Not all products are existing' })
   }
 
